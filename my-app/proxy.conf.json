@@ -1,9 +1,10 @@
 {
-    "/bot/api": 
+    "/bot/api/*": 
     {
-        "target" : "https://lichess.org/api",
+        "target" : "https://lichess.org",
         "secure" : false,
         "changeOrigin": true,
-        "logLevel": "debug"
+        "logLevel": "debug",
+        "pathRewrite": {"^/bot" : ""}
     }
 }
