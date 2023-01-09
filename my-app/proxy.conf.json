@@ -1,5 +1,5 @@
 {
-    "/api": 
+    "/bot/api": 
     {
         "target" : "https://lichess.org/api",
         "secure" : false,
