@@ -1,0 +1,14 @@
+.move {
+    min-width: 30px;
+    border: solid 1px;
+    text-align: center;
+    margin-right: 2px;
+}
+
+.move:hover {
+    background-color: aquamarine;
+}
+
+.moves-list {
+    display: flex;
+}

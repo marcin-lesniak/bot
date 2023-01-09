@@ -1,0 +1,22 @@
+.move {
+    min-width: 30px;
+    border: solid 1px;
+    text-align: center;
+    margin-right: 2px;
+}
+
+.move:hover {
+    background-color: aquamarine;
+}
+
+h3 {
+    font-size: 12px;
+}
+
+.details {
+    display: none;
+}
+
+.move:hover > .details { 
+    display: block;
+}

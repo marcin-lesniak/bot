@@ -1,0 +1,13 @@
+<div class="move" (click)="makeMove()">
+    <p>{{moveEvaluation.move.san}}</p>
+    <p>{{moveEvaluation.score}}</p>
+    <br>
+    <div class="details">
+        <h3>
+            Check={{moveEvaluation.check}}
+            <h3 *ngFor="let item of moveEvaluation.scoreList | keyvalue">
+                {{item.key}}={{item.value}}
+            </h3>
+        </h3>
+    </div>
+</div> 

@@ -1,0 +1,67 @@
+<div *ngIf="!isBotMode else botMode">
+
+    <h3>PGN: {{ pgn }}</h3>
+    <button type="button" class="btn btn-success" (click)="copyPgn()">Kopiuj</button>
+
+    <div class="moves-list">
+        <h3>Wszystkie:</h3> 
+        <div *ngFor="let moveEvaluation of allMoves">
+            <app-chess-move
+                [moveEvaluation]="moveEvaluation"
+                (selectedMove)="makeMove($event)">
+            </app-chess-move>
+        </div>
+    </div>
+
+    <div class="moves-list">
+        <h3>Kandydaci:</h3> 
+        <div *ngFor="let moveEvaluation of candidates">
+            <app-chess-move
+                [moveEvaluation]="moveEvaluation"
+                (selectedMove)="makeMove($event)">
+            </app-chess-move>
+        </div>
+    </div>
+
+    <div class="moves-list">
+        <h3>Wybrany:</h3> 
+        <app-chess-move
+            [moveEvaluation]="bestMove"
+            (selectedMove)="makeMove($event)">
+        </app-chess-move>
+    </div> 
+
+    <form >
+        <button type="button" class="btn btn-success" (click)="moveBack()">Cofnij</button>
+    </form>
+    <br/>
+    <p>Ranodm Game</p>
+    <form >
+        <button type="button" class="btn btn-success" (click)="startRandomGame()">New game</button>
+        <br/>
+        <button type="button" class="btn btn-success" [disabled]="!isRandomGame" 
+            (click)="stopRandomGame()">Stop</button>
+        <button type="button" class="btn btn-success" [disabled]="isRandomGame" 
+            (click)="resumeRandomGame()">Resume</button>
+    </form>
+
+    <div style="width:400px; margin-left: auto; margin-right: auto; padding-bottom: 100px;max-width: 100%">
+        <ngx-chess-board #board [size]="400" (moveChange)="moveCallback($event)"></ngx-chess-board>
+    </div>
+
+    <!-- <ng2-chessboard #board
+    [(position)]="fen">
+    </ng2-chessboard> -->
+
+</div>
+
+<ng-template #botMode>
+    <div>
+        Bot mode.
+    </div>
+    
+    <li *ngFor="let bot of onlineBots; index as i">
+        {{i}} / {{bot.id}} - {{bot.perfs.bullet.rating}}
+        <button type="button" class="btn btn-success" (click)="challenge(bot.id)">challenge</button>
+    </li>
+</ng-template>

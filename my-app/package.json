@@ -1,0 +1,49 @@
+{
+  "name": "my-app",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve --proxy-config proxy.conf.json",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "jest"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "~13.3.0",
+    "@angular/cdk": "^13.3.6",
+    "@angular/common": "~13.3.0",
+    "@angular/compiler": "~13.3.0",
+    "@angular/core": "~13.3.0",
+    "@angular/forms": "~13.3.0",
+    "@angular/material": "^13.3.6",
+    "@angular/platform-browser": "~13.3.0",
+    "@angular/platform-browser-dynamic": "~13.3.0",
+    "@angular/router": "~13.3.0",
+    "@types/oboe": "^2.1.1",
+    "chess.js": "^0.13.0",
+    "ngx-chess-board": "^2.2.1",
+    "rxjs": "~7.5.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~13.3.1",
+    "@angular/cli": "~13.3.1",
+    "@angular/compiler-cli": "~13.3.0",
+    "@types/chess.js": "^0.11.2",
+    "@types/jasmine": "~3.10.0",
+    "@types/jest": "^29.2.0",
+    "@types/node": "^12.11.1",
+    "jasmine-core": "~4.0.0",
+    "jest": "^22.4.4",
+    "jest-preset-angular": "^12.2.2",
+    "karma": "~6.3.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.1.0",
+    "karma-jasmine": "~4.0.0",
+    "karma-jasmine-html-reporter": "~1.7.0",
+    "typescript": "~4.6.2"
+  }
+}
