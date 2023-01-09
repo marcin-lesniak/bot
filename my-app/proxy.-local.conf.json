@@ -1,7 +1,7 @@
 {
-    "/api": 
+    "/": 
     {
-        "target" : "https://lichess.org/api",
+        "target" : "https://lichess.org",
         "secure" : false,
         "changeOrigin": true,
         "logLevel": "debug"
