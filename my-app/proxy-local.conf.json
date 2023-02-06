@@ -2,7 +2,7 @@
     "/": 
     {
         "target" : "https://lichess.org",
-        "secure" : false,
+        "secure" : true,
         "changeOrigin": true,
         "logLevel": "debug"
     }
