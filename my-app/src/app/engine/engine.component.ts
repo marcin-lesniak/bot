@@ -1,11 +1,10 @@
 import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { Chess, PieceType, Move, ChessInstance } from 'chess.js';
+import { Chess, Move, Square } from 'chess.js';
 import { Castel } from '../components/castel';
 import { Center } from '../components/center';
 import { Peaces } from '../components/peaces';
 import { ScorePosition } from '../components/score-position';
 import { MoveEvaluation } from './MoveEvaluation';
-// import { ChessboardModule } from 'ng2-chessboard'
 import {NgxChessBoardService, NgxChessBoardView} from 'ngx-chess-board';
 import { OpenLine } from '../components/open-line';
 import { LastRanks } from '../components/last-ranks';
@@ -14,13 +13,11 @@ import { LichessApi } from '../api/LichessApi';
 import { RobotUser } from '../api/RobotUser';
 import { Material } from '../components/material';
 import { TestBot } from '../test/TestBot';
-import * as e from 'express';
 
 @Component({
   selector: 'app-engine',
   templateUrl: './engine.component.html',
   styleUrls: ['./engine.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EngineComponent implements AfterViewInit {
 
@@ -28,11 +25,9 @@ export class EngineComponent implements AfterViewInit {
   public board!: NgxChessBoardView;
   private chess = new Chess();
   private scoreList:ScorePosition [] = [];
-  private currentTurn = "";
   private readonly MAX_DEPTH = 200;
   private scoreMap = new Map<string, number>();
   private currentDepth = 1;
-  private scoreWithoutCapture = 0;
   private evaluationScore = 0;
   private castel = new Castel(this.chess);
   private material = new Material(this.chess);
@@ -60,20 +55,24 @@ export class EngineComponent implements AfterViewInit {
   constructor(private cdRef:ChangeDetectorRef, private ngxChessBoardService: NgxChessBoardService) { }
 
   ngAfterViewInit(): void {
-    this.scoreList.push(new Center(this.chess));
-    this.scoreList.push(new Peaces(this.chess));
-    this.scoreList.push(new OpenLine(this.chess));
-    this.scoreList.push(new LastRanks(this.chess));
-    this.scoreList.push(new PassedPawn(this.chess));
+    this.createScoreList();
 
     this.board.reset();
-    // this.loadFEN("8/7p/P1bk4/8/8/2K3R1/6pr/8 b - - 9 54");
+    // this.loadFEN("2k1rb1r/pp1n1ppp/8/1N1np1B1/4bP2/PP3N2/1K1QPqPP/3R1BR1 w - - 0 18");
     this.game();
     
     // this.startRandomGame();
 
     this.startBot();
     // this.testBot();
+  }
+
+  private createScoreList(): void {
+    this.scoreList.push(new Center(this.chess));
+    this.scoreList.push(new Peaces(this.chess));
+    this.scoreList.push(new OpenLine(this.chess));
+    this.scoreList.push(new LastRanks(this.chess));
+    this.scoreList.push(new PassedPawn(this.chess));
   }
 
   public startRandomGame() {
@@ -86,35 +85,23 @@ export class EngineComponent implements AfterViewInit {
 
   private randomGame() {
     this.isRandomGame = true;
-    if(!this.chess.game_over()) {
+    if(!this.chess.isGameOver()) {
       this.makeMove(this.bestMove);
-      // setTimeout(() => {
-      //   this.makeMove(this.bestMove);
-      //   this.randomGame();
-      // }, 100)
     }
   }
 
   private game():MoveEvaluation {
     var self = this;
     this.fen = this.chess.fen();
-    this.currentTurn = this.chess.turn();
-    if(this.chess.game_over()) {
-      // this.bestMove = "#";
+    if(this.chess.isGameOver()) {
       return new MoveEvaluation(this.chess.moves({verbose: true})[0]);
-      ;
     }
     this.allMoves = this.getAllMoves();
-    let bestScore = 0;
-    if(self.chess.turn() === "w") {
-      bestScore = -1000000;
-    } else {
-      bestScore = 1000000;
-    }
+    let bestScore = this.getInitialScore();
+    
     let candidateMovesByMaterial: MoveEvaluation[] = [];
     this.currentDepth = 1;
-    this.scoreWithoutCapture = this.material.score();
-    this.evaluationScore = this.scoreWithoutCapture;
+    this.evaluationScore = this.material.score();
     this.allMoves.forEach(function(value: MoveEvaluation) {
       self.evaluate(value);
       if((self.chess.turn() === "w" && value.score > bestScore) 
@@ -133,6 +120,14 @@ export class EngineComponent implements AfterViewInit {
     return this.bestMove;
   }
 
+  private getInitialScore(): number {
+    if(this.chess.turn() === "w") {
+      return -1000000;
+    }
+
+    return 1000000;
+  }
+
   private getAllMoves() {
     let allMoves:MoveEvaluation[] = [];
     this.chess.moves({verbose: true}).forEach((move) => {
@@ -146,7 +141,7 @@ export class EngineComponent implements AfterViewInit {
     let score = this.scoreForMyMove(value.move, this.evaluationScore, true);
     this.chess.move(value.move);
 
-    if(this.chess.in_checkmate()) {
+    if(this.chess.isCheckmate()) {
       if(this.chess.turn() === "b") {
         score += 1000;
       } else {
@@ -155,7 +150,7 @@ export class EngineComponent implements AfterViewInit {
     } else if(this.isGameDrawn()) {
       score = 0;
     } else {
-      if(this.chess.in_check()) {
+      if(this.chess.isCheck()) {
         value.check = 0.1;
         if(this.chess.turn() === "b") {
           score += 0.1;
@@ -163,7 +158,7 @@ export class EngineComponent implements AfterViewInit {
           score -= 0.1;
         }
       } else {
-        // score += this.scoreAttackOnKingRing();
+        score += this.scoreAttackOnKingRing()*0.01;
       }
   
       this.scoreList.forEach((scorePosition) => {
@@ -325,7 +320,7 @@ export class EngineComponent implements AfterViewInit {
 
   private isOponentNextMoveCheckmate(move: Move) {
     this.chess.move(move);
-      if(this.chess.in_checkmate()) {
+      if(this.chess.isCheckmate()) {
         this.chess.undo();
         return true;
       }
@@ -398,7 +393,7 @@ export class EngineComponent implements AfterViewInit {
 
   public moveCallback(move:any) {
     let chessEngineMove = this. getChessEngineMove(move.move);
-    this.chess.move(chessEngineMove, { sloppy: true });
+    this.chess.move(chessEngineMove, { strict: true });
     this.refresh();
   }
 
@@ -448,7 +443,7 @@ export class EngineComponent implements AfterViewInit {
 
   private botMove(moves: any) {
     this.chess.reset();
-    moves.forEach((move: any) => this.chess.move(move, { sloppy: true }));
+    moves.forEach((move: any) => this.chess.move(move));
     let bestMove = this.game();
     return bestMove.move.from + bestMove.move.to + (bestMove.move.flags === "p" ? bestMove.move.piece : "");
   }
@@ -467,7 +462,7 @@ export class EngineComponent implements AfterViewInit {
   }
 
   private isGameDrawn() {
-    return this.chess.in_draw() || this.chess.in_stalemate() || this.chess.in_threefold_repetition();
+    return this.chess.isDraw() || this.chess.isStalemate() || this.chess.isThreefoldRepetition();
   }
 
   public challenge(botId :string) {
@@ -475,7 +470,7 @@ export class EngineComponent implements AfterViewInit {
   }
 
   private testBot() {
-    const testBot = new TestBot(this.chess.load, this.game.bind(this));
+    const testBot = new TestBot(this.chess.load.bind(this.chess), this.game.bind(this));
     testBot.test();
   }
 
@@ -484,17 +479,17 @@ export class EngineComponent implements AfterViewInit {
     let whiteKingRing = this.getKingRing(this.material.whiteKingPosition);
     let blackKingRing = this.getKingRing(this.material.blackKingPosition);
 
-    // if(this.chess.turn() == "w") {
-    //   this.chess.moves().forEach((move) => {
-    //     let found = whiteKingRing.find((obj) => {
-    //       return obj === move;
-    //     })
+    blackKingRing.forEach((field) => {
+      if(this.chess.isAttacked(field as Square, 'w')) {
+        score++;
+      }
+    })
 
-    //     if(found) {
-    //       score++;
-    //     }
-    //   })
-    // }
+    whiteKingRing.forEach((field) => {
+      if(this.chess.isAttacked(field as Square, 'b')) {
+        score--;
+      }
+    })
     
     return score;
   }

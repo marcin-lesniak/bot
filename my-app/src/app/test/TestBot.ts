@@ -41,6 +41,7 @@ export class TestBot {
     testCases.push(...this.exchange());
     testCases.push(...this.twoBishops());
     testCases.push(...this.promotion());
+    testCases.push(...this.kingRing());
     return testCases;
   }
 
@@ -348,6 +349,24 @@ export class TestBot {
         "promotion for black",
         "8/p5K1/7p/2p3bP/k7/8/1p6/8 b - - 1 72",
         "b2b1"
+    ));
+    
+    return testCases;
+  }
+
+  private kingRing() {
+    let testCases: TestCase[] = [];
+
+    testCases.push(new TestCase(
+        "king ring for white",
+        "rnbq1rk1/ppp1bpp1/4pn1p/3p4/3P4/1P2PN2/PBP2PPP/RNQ1KB1R w KQq - 0 1",
+        "f1d3"
+    ));
+
+    testCases.push(new TestCase(
+        "king ring for black",
+        "rn1q1rk1/pppb2pp/3np3/b2p1p2/3P4/1P1BP3/PBPN1PPP/RN1Q1RK1 b Qq - 0 1",
+        "d8h4"
     ));
     
     return testCases;

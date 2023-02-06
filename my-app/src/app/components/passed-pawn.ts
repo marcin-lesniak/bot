@@ -1,9 +1,9 @@
 import { ScorePosition } from "./score-position";
-import { Chess, ChessInstance } from 'chess.js';
+import { Chess } from 'chess.js';
 
 export class PassedPawn implements ScorePosition {
 
-    constructor(private chess: ChessInstance) {}
+    constructor(private chess: Chess) {}
 
     public description(): string {
         return "PassedPawn";

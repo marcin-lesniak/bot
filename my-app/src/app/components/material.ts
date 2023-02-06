@@ -1,5 +1,5 @@
 import { ScorePosition } from "./score-position";
-import { Chess, ChessInstance, PieceType, Square } from 'chess.js';
+import { Chess, PieceSymbol } from 'chess.js';
 import { MaterialCount } from "./materialCount";
 
 export class Material implements ScorePosition {
@@ -9,7 +9,7 @@ export class Material implements ScorePosition {
     public whiteKingPosition = {x:-1, y:-1};
     public blackKingPosition = {x:-1, y:-1};
 
-    constructor(private chess: ChessInstance) {}
+    constructor(private chess: Chess) {}
 
     public description(): string {
         return "Material";
@@ -19,32 +19,35 @@ export class Material implements ScorePosition {
       let score = 0;
       this.whiteCount.clear();
       this.blackCount.clear();
-  
-      let board: Array<Array<{ type: PieceType; color: "w" | "b" } | null>> = this.chess.board();
-      for(let i=0; i<8; i++) {
-          for(let j=0; j<8; j++) {
-              if(board[i][j]) {
-                  if(board[i][j]?.color == 'w') {
-                      this.countPieceMaterial(board[i][j]?.type, this.whiteCount);
-                      if(board[i][j]?.type === 'k') {
-                        this.whiteKingPosition = {x:i, y:j};
-                      }
-                  } else {
-                      this.countPieceMaterial(board[i][j]?.type, this.blackCount);
-                      if(board[i][j]?.type === 'k') {
-                        this.blackKingPosition = {x:i, y:j};
-                      }
-                  }
-              }
-          }
-      }
 
+      this.checkMaterial();
       score = this.whiteCount.score() - this.blackCount.score();
 
       return score;
   }
 
-    public countPieceMaterial(piece: PieceType | undefined, count: MaterialCount) {
+  private checkMaterial() {
+    let board = this.chess.board();
+    for(let i=0; i<8; i++) {
+        for(let j=0; j<8; j++) {
+            if(board[i][j]) {
+                if(board[i][j]?.color == 'w') {
+                    this.countPieceMaterial(board[i][j]?.type, this.whiteCount);
+                    if(board[i][j]?.type === 'k') {
+                      this.whiteKingPosition = {x:j, y:i};
+                    }
+                } else {
+                    this.countPieceMaterial(board[i][j]?.type, this.blackCount);
+                    if(board[i][j]?.type === 'k') {
+                      this.blackKingPosition = {x:j, y:i};
+                    }
+                }
+            }
+        }
+    }
+  }
+
+    public countPieceMaterial(piece: PieceSymbol | undefined, count: MaterialCount) {
       switch(piece) {
         case "p": 
           count.pawns++;
@@ -64,7 +67,7 @@ export class Material implements ScorePosition {
       }
     }
 
-    public evaluatePieceMaterial(piece: PieceType | undefined) {
+    public evaluatePieceMaterial(piece: PieceSymbol | undefined) {
         switch(piece) {
           case "p": return 1;
           

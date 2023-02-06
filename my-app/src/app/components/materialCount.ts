@@ -1,5 +1,3 @@
-import { Chess, ChessInstance, PieceType } from 'chess.js';
-
 export class MaterialCount {
 
     public pawns = 0;

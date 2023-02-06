@@ -1,9 +1,9 @@
-import { ChessInstance } from "chess.js";
+import { Chess } from "chess.js";
 import { MoveEvaluation } from "../engine/MoveEvaluation";
 
 export class Castel {
 
-    constructor(private chess: ChessInstance) {}
+    constructor(private chess: Chess) {}
 
     public evaluateCastel(move: MoveEvaluation) {
         if(move.move.san.includes("O-O")) {

@@ -1,9 +1,9 @@
-import { ChessInstance, PieceType } from "chess.js";
+import { Chess, PieceSymbol } from "chess.js";
 import { ScorePosition } from "./score-position";
 
 export class Peaces implements ScorePosition {
 
-    constructor(private chess: ChessInstance) {}
+    constructor(private chess: Chess) {}
 
     public description(): string {
         return "Peaces";
@@ -24,7 +24,7 @@ export class Peaces implements ScorePosition {
         return score;
     }
 
-    private isPeaceOnFirstLine(peace:{ type: PieceType; color: "w" | "b" } | null, color: "w" | "b"): boolean {
+    private isPeaceOnFirstLine(peace:{ type: PieceSymbol; color: "w" | "b" } | null, color: "w" | "b"): boolean {
         if(peace?.color == color && 
             (peace?.type === "n"
             || peace?.type === "b"
