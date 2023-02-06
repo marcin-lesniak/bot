@@ -7,8 +7,8 @@ import * as oboe from "oboe";
 export class LichessApi {
   
   private token = "lip_U2PnD9AVg0rt8zcIsjYk"  ;
-  private baseURL = "http://localhost:4200/";
-  // private baseURL = "https://marcin-lesniak.github.io/bot/";
+  // private baseURL = "http://localhost:4200/";
+  private baseURL = "https://marcin-lesniak.github.io/bot/";
   private headers = { "Authorization": `Bearer ${this.token}` };
   private axiosConfig = {
     baseURL: this.baseURL,
