@@ -1,7 +1,7 @@
 cls^
  && del /S /Q .\docs^
  && cd my-app^
- && ng build --base-href=/bot/^
+ && ng build --base-href=/bot/ --cross-origin none^
  && cd ..^
  && xcopy /s .\my-app\docs .\docs^
  && git add .^
