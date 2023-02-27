@@ -7,7 +7,9 @@ export class Material implements ScorePosition {
     public whiteCount = new MaterialCount();
     public blackCount = new MaterialCount();
     public whiteKingPosition = {x:-1, y:-1};
+    public whitePawnsPositions = Array<any>();
     public blackKingPosition = {x:-1, y:-1};
+    public blackPawnsPositions = Array<any>();
 
     constructor(private chess: Chess) {}
 
@@ -30,21 +32,32 @@ export class Material implements ScorePosition {
     let board = this.chess.board();
     for(let i=0; i<8; i++) {
         for(let j=0; j<8; j++) {
-            if(board[i][j]) {
-                if(board[i][j]?.color == 'w') {
-                    this.countPieceMaterial(board[i][j]?.type, this.whiteCount);
-                    if(board[i][j]?.type === 'k') {
-                      this.whiteKingPosition = {x:j, y:i};
-                    }
-                } else {
-                    this.countPieceMaterial(board[i][j]?.type, this.blackCount);
-                    if(board[i][j]?.type === 'k') {
-                      this.blackKingPosition = {x:j, y:i};
-                    }
-                }
-            }
+          let position = board[i][j];
+          if(position) {
+              if(position?.color == 'w') {
+                  this.countPieceMaterial(position?.type, this.whiteCount);
+                  if(position?.type === 'k') {
+                    this.whiteKingPosition = {x:j, y:i};
+                  } else if(position?.type === 'p') {
+                    this.whitePawnsPositions.push({x:j, y:i});
+                  }
+              } else {
+                  this.countPieceMaterial(position?.type, this.blackCount);
+                  if(position?.type === 'k') {
+                    this.blackKingPosition = {x:j, y:i};
+                  } else if(position?.type === 'p') {
+                    this.blackPawnsPositions.push({x:j, y:i});
+                  }
+              }
+          }
         }
     }
+    this.whitePawnsPositions.sort((a, b) => {
+      return a.x - b.x;
+    })
+    this.blackPawnsPositions.sort((a, b) => {
+      return a.x - b.x;
+    })
   }
 
     public countPieceMaterial(piece: PieceSymbol | undefined, count: MaterialCount) {

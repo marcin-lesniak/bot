@@ -42,6 +42,7 @@ export class TestBot {
     testCases.push(...this.twoBishops());
     testCases.push(...this.promotion());
     testCases.push(...this.kingRing());
+    testCases.push(...this.doubledPawns());
     return testCases;
   }
 
@@ -368,6 +369,26 @@ export class TestBot {
         "rn1q1rk1/pppb2pp/3np3/b2p1p2/3P4/1P1BP3/PBPN1PPP/RN1Q1RK1 b Qq - 0 1",
         "d8h4"
     ));
+
+    return testCases;
+  }
+
+    private doubledPawns() {
+        let testCases: TestCase[] = [];
+    
+        testCases.push(new TestCase(
+            "recapture for white",
+            "rn1qkbnr/ppp1pp1p/3p2p1/8/2PP4/4Pb2/PP2QPPP/RNB1KB1R w KQkq - 0 1",
+            "e2f3"
+        ));
+    
+        testCases.push(new TestCase(
+            "recapture for black",
+            "rnb1kb1r/ppp1qppp/4pB2/3p4/3P4/4PN2/PPP2PPP/RN1QKB1R b KQkq - 0 1",
+            "e7f6"
+        ));
+
+    
     
     return testCases;
   }

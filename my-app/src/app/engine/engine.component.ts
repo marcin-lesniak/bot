@@ -13,6 +13,7 @@ import { LichessApi } from '../api/LichessApi';
 import { RobotUser } from '../api/RobotUser';
 import { Material } from '../components/material';
 import { TestBot } from '../test/TestBot';
+import { PawnsStructures } from '../components/pawns-structure';
 
 @Component({
   selector: 'app-engine',
@@ -52,13 +53,15 @@ export class EngineComponent implements AfterViewInit {
     "d2", "e2", "f2", "g2", "h2", "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1",
 ];
 
-  constructor(private cdRef:ChangeDetectorRef, private ngxChessBoardService: NgxChessBoardService) { }
+  constructor(
+    private cdRef:ChangeDetectorRef, 
+    private ngxChessBoardService: NgxChessBoardService) { }
 
   ngAfterViewInit(): void {
     this.createScoreList();
 
     this.board.reset();
-    // this.loadFEN("2k1rb1r/pp1n1ppp/8/1N1np1B1/4bP2/PP3N2/1K1QPqPP/3R1BR1 w - - 0 18");
+    // this.loadFEN("rnb1kb1r/ppp1qppp/4pB2/3p4/3P4/4PN2/PPP2PPP/RN1QKB1R b KQkq - 0 1");
     this.game();
     
     // this.startRandomGame();
@@ -73,6 +76,7 @@ export class EngineComponent implements AfterViewInit {
     this.scoreList.push(new OpenLine(this.chess));
     this.scoreList.push(new LastRanks(this.chess));
     this.scoreList.push(new PassedPawn(this.chess));
+    this.scoreList.push(new PawnsStructures(this.chess, this.material));
   }
 
   public startRandomGame() {
@@ -116,6 +120,8 @@ export class EngineComponent implements AfterViewInit {
 
     this.candidates = candidateMovesByMaterial;
     this.bestMove = candidateMovesByMaterial[Math.floor(Math.random() * candidateMovesByMaterial.length)];
+
+    this.cdRef.detectChanges();
 
     return this.bestMove;
   }
@@ -393,7 +399,7 @@ export class EngineComponent implements AfterViewInit {
 
   public moveCallback(move:any) {
     let chessEngineMove = this. getChessEngineMove(move.move);
-    this.chess.move(chessEngineMove, { strict: true });
+    this.chess.move(chessEngineMove);
     this.refresh();
   }
 
@@ -439,6 +445,7 @@ export class EngineComponent implements AfterViewInit {
         return -1;
       })
     });
+    this.cdRef.detectChanges();
   }
 
   private botMove(moves: any) {
