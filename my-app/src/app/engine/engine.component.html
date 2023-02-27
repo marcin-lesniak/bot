@@ -56,7 +56,7 @@
         Bot mode.
     </div>
     
-    <li *ngFor="let bot of onlineBots; index as i">
+    <li *ngFor="let bot of onlineBots; index as i" [class.user-bot] = "bot.id === 'marcinlebot'">
         {{i}} / {{bot.id}} - {{bot.perfs.bullet.rating}}
         <button type="button" class="btn btn-success" (click)="challenge(bot.id)">challenge</button>
     </li>

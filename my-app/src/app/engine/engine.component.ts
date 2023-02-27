@@ -26,6 +26,7 @@ export class EngineComponent implements AfterViewInit {
   public board!: NgxChessBoardView;
   private chess = new Chess();
   private scoreList:ScorePosition [] = [];
+  private minScoreList:ScorePosition [] = [];
   private readonly MAX_DEPTH = 200;
   private scoreMap = new Map<string, number>();
   private currentDepth = 1;
@@ -77,6 +78,9 @@ export class EngineComponent implements AfterViewInit {
     this.scoreList.push(new LastRanks(this.chess));
     this.scoreList.push(new PassedPawn(this.chess));
     this.scoreList.push(new PawnsStructures(this.chess, this.material));
+
+    this.minScoreList.push(new OpenLine(this.chess));
+    this.minScoreList.push(new LastRanks(this.chess));
   }
 
   public startRandomGame() {
@@ -94,7 +98,7 @@ export class EngineComponent implements AfterViewInit {
     }
   }
 
-  private game():MoveEvaluation {
+  private game(remainingTime?: number):MoveEvaluation {
     var self = this;
     this.fen = this.chess.fen();
     if(this.chess.isGameOver()) {
@@ -107,7 +111,7 @@ export class EngineComponent implements AfterViewInit {
     this.currentDepth = 1;
     this.evaluationScore = this.material.score();
     this.allMoves.forEach(function(value: MoveEvaluation) {
-      self.evaluate(value);
+      self.evaluate(value, remainingTime);
       if((self.chess.turn() === "w" && value.score > bestScore) 
       || (self.chess.turn() === "b" && value.score < bestScore)) {
           bestScore = value.score;
@@ -143,7 +147,7 @@ export class EngineComponent implements AfterViewInit {
     return allMoves;
   }
 
-  private evaluate(value:MoveEvaluation) {
+  private evaluate(value:MoveEvaluation, remainingTime?: number) {
     let score = this.scoreForMyMove(value.move, this.evaluationScore, true);
     this.chess.move(value.move);
 
@@ -166,12 +170,20 @@ export class EngineComponent implements AfterViewInit {
       } else {
         score += this.scoreAttackOnKingRing()*0.01;
       }
-  
-      this.scoreList.forEach((scorePosition) => {
-        let s = scorePosition.score();
-        value.scoreList.set(scorePosition.description(), s);
-        score += s;
-      })
+
+      if(remainingTime && remainingTime < 15000) {
+        this.minScoreList.forEach((scorePosition) => {
+          let s = scorePosition.score();
+          value.scoreList.set(scorePosition.description(), s);
+          score += s;
+        })
+      } else {
+        this.scoreList.forEach((scorePosition) => {
+          let s = scorePosition.score();
+          value.scoreList.set(scorePosition.description(), s);
+          score += s;
+        })
+      }
   
       score += this.castel.evaluateCastel(value);
       score += this.evaluateCapture(score, value.move);
@@ -448,10 +460,10 @@ export class EngineComponent implements AfterViewInit {
     this.cdRef.detectChanges();
   }
 
-  private botMove(moves: any) {
+  private botMove(moves: any, remainingTime?: number) {
     this.chess.reset();
     moves.forEach((move: any) => this.chess.move(move));
-    let bestMove = this.game();
+    let bestMove = this.game(remainingTime);
     return bestMove.move.from + bestMove.move.to + (bestMove.move.flags === "p" ? bestMove.move.piece : "");
   }
 

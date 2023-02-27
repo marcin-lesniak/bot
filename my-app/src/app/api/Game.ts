@@ -41,17 +41,25 @@ export class Game {
         this.playNextMove(event.state.moves);
         break;
       case "gameState":
-        this.playNextMove(event.moves);
+        this.playNextMove(event.moves, this.getRemainingTime(event));
         break;
       default:
         console.log("Unhandled game event : " + JSON.stringify(event));
     }
   }
 
-  playNextMove(previousMoves: string) {
+  getRemainingTime(event: any) {
+    if(this.colour === 'white') {
+      return event.wtime;
+    } else {
+      return event.btime;
+    }
+  }
+
+  playNextMove(previousMoves: string, remainingTime?: number) {
     const moves = (previousMoves === "") ? [] : previousMoves.split(" ");
     if (this.isTurn(this.colour, moves)) {
-      const nextMove = this.getNextMove(moves);
+      const nextMove = this.getNextMove(moves, remainingTime);
       if (nextMove) {
         console.log(this.name + " as " + this.colour + " to move " + nextMove);
         this.api.makeMove(this.gameId, nextMove);
