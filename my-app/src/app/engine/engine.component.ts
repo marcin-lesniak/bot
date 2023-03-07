@@ -65,7 +65,7 @@ export class EngineComponent implements AfterViewInit {
     // this.loadFEN("rnb1kb1r/ppp1qppp/4pB2/3p4/3P4/4PN2/PPP2PPP/RN1QKB1R b KQkq - 0 1");
     this.game();
     
-    // this.startRandomGame();
+    this.startRandomGame();
 
     // this.startBot();
     // this.testBot();

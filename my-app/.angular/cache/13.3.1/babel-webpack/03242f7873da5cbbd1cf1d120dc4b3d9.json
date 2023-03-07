@@ -1,1 +1,0 @@
-{"ast":null,"code":"export class Castel {\n  constructor(chess) {\n    this.chess = chess;\n  }\n\n  evaluateCastel(move) {\n    if (move.move.san.includes(\"O-O\")) {\n      if (this.chess.turn() === \"b\") {\n        return 0.1;\n      } else {\n        return -0.1;\n      }\n    }\n\n    return 0;\n  }\n\n}","map":null,"metadata":{},"sourceType":"module"}
