@@ -67,7 +67,7 @@ export class EngineComponent implements AfterViewInit {
     
     // this.startRandomGame();
 
-    this.startBot();
+    // this.startBot();
     // this.testBot();
   }
 
@@ -410,9 +410,11 @@ export class EngineComponent implements AfterViewInit {
   }
 
   public moveCallback(move:any) {
-    let chessEngineMove = this. getChessEngineMove(move.move);
-    this.chess.move(chessEngineMove);
-    this.refresh();
+    if(this.chess.turn() === move.color[0]) {
+      let chessEngineMove = this. getChessEngineMove(move.move);
+      this.chess.move(chessEngineMove);
+      this.refresh();
+    }
   }
 
   private getChessEngineMove(move: string): string {
