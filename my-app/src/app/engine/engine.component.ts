@@ -63,12 +63,12 @@ export class EngineComponent implements AfterViewInit {
     this.createScoreList();
 
     this.board.reset();
-    this.loadFEN("r3r1k1/p3nppp/8/5bN1/5P2/2p5/P3P1PP/3KRB1R w - - 0 21"); // <--- Do sprawdzenia  
+    // this.loadFEN("r3r1k1/p3nppp/8/5bN1/5P2/2p5/P3P1PP/3KRB1R w - - 0 21"); // <--- Do sprawdzenia  
     this.game();
     
     // this.startRandomGame();
 
-    // this.startBot();
+    this.startBot();
     // this.testBot();
   }
 
