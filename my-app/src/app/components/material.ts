@@ -8,8 +8,16 @@ export class Material implements ScorePosition {
     public blackCount = new MaterialCount();
     public whiteKingPosition = {x:-1, y:-1};
     public whitePawnsPositions = Array<any>();
+    public whiteQueensPositions = Array<any>();
+    public whiteRooksPositions = Array<any>();
+    public whiteBishopsPositions = Array<any>();
+    public whiteKnightsPositions = Array<any>();
     public blackKingPosition = {x:-1, y:-1};
     public blackPawnsPositions = Array<any>();
+    public blackQueensPositions = Array<any>();
+    public blackRooksPositions = Array<any>();
+    public blackBishopsPositions = Array<any>();
+    public blackKnightsPositions = Array<any>();
 
     constructor(private chess: Chess) {}
 
@@ -19,8 +27,6 @@ export class Material implements ScorePosition {
 
     public score(): number {
       let score = 0;
-      this.whiteCount.clear();
-      this.blackCount.clear();
 
       this.checkMaterial();
       score = this.whiteCount.score() - this.blackCount.score();
@@ -29,6 +35,8 @@ export class Material implements ScorePosition {
   }
 
   private checkMaterial() {
+    this.clear();
+
     let board = this.chess.board();
     for(let i=0; i<8; i++) {
         for(let j=0; j<8; j++) {
@@ -38,6 +46,14 @@ export class Material implements ScorePosition {
                   this.countPieceMaterial(position?.type, this.whiteCount);
                   if(position?.type === 'k') {
                     this.whiteKingPosition = {x:j, y:i};
+                  } else if (position?.type === 'q') {
+                    this.whiteQueensPositions.push({x:j, y:i});
+                  } else if (position?.type === 'r') {
+                    this.whiteRooksPositions.push({x:j, y:i});
+                  } else if (position?.type === 'b') {
+                    this.whiteBishopsPositions.push({x:j, y:i});
+                  } else if (position?.type === 'n') {
+                    this.whiteKnightsPositions.push({x:j, y:i});
                   } else if(position?.type === 'p') {
                     this.whitePawnsPositions.push({x:j, y:i});
                   }
@@ -45,6 +61,14 @@ export class Material implements ScorePosition {
                   this.countPieceMaterial(position?.type, this.blackCount);
                   if(position?.type === 'k') {
                     this.blackKingPosition = {x:j, y:i};
+                  } else if (position?.type === 'q') {
+                    this.blackQueensPositions.push({x:j, y:i});
+                  } else if (position?.type === 'r') {
+                    this.blackRooksPositions.push({x:j, y:i});
+                  } else if (position?.type === 'b') {
+                    this.blackBishopsPositions.push({x:j, y:i});
+                  } else if (position?.type === 'n') {
+                    this.blackKnightsPositions.push({x:j, y:i});
                   } else if(position?.type === 'p') {
                     this.blackPawnsPositions.push({x:j, y:i});
                   }
@@ -102,4 +126,35 @@ export class Material implements ScorePosition {
           
         }
       }
+
+  public refreshPeacesPosition() {
+    this.checkMaterial();
+  }
+
+  public getAllWhitePeacesPosition() {
+    return this.whiteQueensPositions.concat(this.whiteRooksPositions, this.whiteBishopsPositions,
+      this.whiteKnightsPositions, this.whitePawnsPositions);
+  }
+
+  public getAllBlackPeacesPosition() {
+    return this.blackQueensPositions.concat(this.blackRooksPositions, this.blackBishopsPositions,
+      this.blackKnightsPositions, this.blackPawnsPositions);
+  }
+
+  private clear() {
+    this.whiteCount.clear();
+    this.blackCount.clear();
+    this.whiteKingPosition = {x:-1, y:-1};
+    this.whitePawnsPositions = Array<any>();
+    this.whiteQueensPositions = Array<any>();
+    this.whiteRooksPositions = Array<any>();
+    this.whiteBishopsPositions = Array<any>();
+    this.whiteKnightsPositions = Array<any>();
+    this.blackKingPosition = {x:-1, y:-1};
+    this.blackPawnsPositions = Array<any>();
+    this.blackQueensPositions = Array<any>();
+    this.blackRooksPositions = Array<any>();
+    this.blackBishopsPositions = Array<any>();
+    this.blackKnightsPositions = Array<any>();
+  }
 }

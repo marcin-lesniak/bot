@@ -1,0 +1,1 @@
+{"ast":null,"code":"export class TestCase {\n  constructor(decription, fen, bestMove) {\n    this.decription = decription;\n    this.fen = fen;\n    this.bestMove = bestMove;\n  }\n\n}","map":null,"metadata":{},"sourceType":"module"}

@@ -43,6 +43,7 @@ export class TestBot {
     testCases.push(...this.promotion());
     testCases.push(...this.kingRing());
     testCases.push(...this.doubledPawns());
+    testCases.push(...this.hangingPeaces());
     return testCases;
   }
 
@@ -294,7 +295,7 @@ export class TestBot {
 
     testCases.push(new TestCase(
         "exhange pawns when have advantage and more pawns then 2",
-        "8/p1p1pp2/1p2nk2/2P5/5P2/4P1P1/PP1PBK2/8 w - - 0 1",
+        "8/p1p1p1p1/1p2nk2/2P5/5P2/4P1P1/P2PBK1P/8 w - - 0 1",
         "c5b6"
     ));
 
@@ -360,13 +361,13 @@ export class TestBot {
 
     testCases.push(new TestCase(
         "king ring for white",
-        "rnbq1rk1/ppp1bpp1/4pn1p/3p4/3P4/1P2PN2/PBP2PPP/RNQ1KB1R w KQq - 0 1",
+        "rnbq1rk1/ppp1bpp1/4pn1p/3p4/3P4/1P2PN2/PBP2PPP/RNQ1RBK1 w Qq - 0 1",
         "f1d3"
     ));
 
     testCases.push(new TestCase(
         "king ring for black",
-        "rn1q1rk1/pppb2pp/3np3/b2p1p2/3P4/1P1BP3/PBPN1PPP/RN1Q1RK1 b Qq - 0 1",
+        "1n1q1rk1/1p1b2pp/p1pnp3/3p1p2/3P4/1P1BP3/PBPN1PPP/RN1Q1RK1 b Q - 0 1",
         "d8h4"
     ));
 
@@ -387,9 +388,51 @@ export class TestBot {
             "rnb1kb1r/ppp1qppp/4pB2/3p4/3P4/4PN2/PPP2PPP/RN1QKB1R b KQkq - 0 1",
             "e7f6"
         ));
+    
+    return testCases;
+  }
 
+  private hangingPeaces() {
+    let testCases: TestCase[] = [];
     
-    
+    //TODO
+    // testCases.push(new TestCase(
+    //     "attack hanging peace - white",
+    //     "r4rk1/1p1nb2p/p5p1/4pp2/8/N4N2/PP3PPP/5RK1 w - - 0 1",
+    //     "f1d1"
+    // ));
+
+    testCases.push(new TestCase(
+        "move hanging peace - white",
+        "kr3r2/1p1n3p/p5p1/4pp2/8/NP3N2/P4PPP/6K1 w - - 0 1",
+        "a3c4"
+    ));
+
+    testCases.push(new TestCase(
+        "defece hanging peace - white",
+        "r4r1k/1p1n1p1p/p5p1/3N4/8/1P3N2/P1P1PPPP/6K1 w - - 0 1",
+        "c2c4"
+    ));
+
+    //TODO
+    // testCases.push(new TestCase(
+    //     "attack hanging peace - black",
+    //     "5rk1/1p2b2p/pn4p1/5p2/3N4/2N5/PP3PPP/5RK1 b - - 0 1",
+    //     "f8d8"
+    // ));
+
+    testCases.push(new TestCase(
+        "move hanging peace - black",
+        "6k1/1p1pp2p/p5p1/5p2/6n1/NP6/P3NPPP/6K1 b - - 0 1",
+        "e7e5"
+    ));
+
+    testCases.push(new TestCase(
+        "defece hanging peace - black",
+        "r2k1r2/1p1np3/pPp3p1/P1P2p1p/2NP4/5N2/4PPPP/6K1 b - - 0 1",
+        "a8b8"
+    ));
+
     return testCases;
   }
 

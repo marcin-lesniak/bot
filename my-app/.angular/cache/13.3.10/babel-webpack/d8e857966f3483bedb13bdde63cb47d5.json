@@ -1,0 +1,1 @@
+{"ast":null,"code":"export class MoveEvaluation {\n  constructor(move, score = 0) {\n    this.move = move;\n    this.score = score;\n    this.check = 0;\n    this.scoreList = new Map();\n  }\n\n}","map":null,"metadata":{},"sourceType":"module"}
