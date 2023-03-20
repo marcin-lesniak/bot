@@ -53,7 +53,11 @@
 
 <ng-template #botMode>
     <div>
-        Bot mode.
+        Bot mode.<br/>
+    </div>
+
+    <div>
+        Game State: {{gameState}}
     </div>
     
     <li *ngFor="let bot of onlineBots; index as i" [class.user-bot] = "bot.id === 'marcinlebot'">

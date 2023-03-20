@@ -5,15 +5,17 @@ export class RobotUser {
   private api;
   private replyChat;
   private getNextMove;
+  private updateGameState;
   private account: any;
   
   /**
    * Initialise with access token to lichess and a player algorithm.
    */
-   constructor(api: any, replyChat: Function, getNextMove: Function) {
+   constructor(api: any, replyChat: Function, getNextMove: Function, updateGameState: Function) {
     this.api = api;
     this.replyChat = replyChat;
     this.getNextMove = getNextMove;
+    this.updateGameState = updateGameState;
   }
 
   async start() {
@@ -24,6 +26,7 @@ export class RobotUser {
   }
 
   eventHandler(event: any) {
+    this.updateGameState(event?.challenge?.status);
     switch (event.type) {
       case "challenge":
         this.handleChallenge(event.challenge);
@@ -37,7 +40,8 @@ export class RobotUser {
   }
 
   handleGameStart(id: string) {
-    const game = new Game(this.api, this.account.data.username, this.replyChat, this.getNextMove);
+    const game = new Game(this.api, this.account.data.username, this.replyChat, this.getNextMove, 
+      this.updateGameState);
     game.start(id);
   }
 

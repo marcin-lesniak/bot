@@ -4,17 +4,19 @@ export class Game {
   private name;
   private replyChat;
   private getNextMove;
+  private updateGameState;
   private gameId = "";
   private colour = "";
   
   /**
    * Initialise with interface to lichess.
    */
-   constructor(api:any , name: string, replyChat: Function, getNextMove: Function) {
+   constructor(api:any , name: string, replyChat: Function, getNextMove: Function, updateGameState: Function) {
     this.api = api;
     this.name = name;
     this.replyChat = replyChat;
     this.getNextMove = getNextMove;
+    this.updateGameState = updateGameState;
   }
 
   start(gameId: string) {
@@ -41,6 +43,7 @@ export class Game {
         this.playNextMove(event.state.moves);
         break;
       case "gameState":
+        this.updateGameState(event.status);
         this.playNextMove(event.moves, this.getRemainingTime(event));
         break;
       default:
