@@ -20,6 +20,7 @@ import { HangingPeaces } from '../components/hanging-peaces';
   selector: 'app-engine',
   templateUrl: './engine.component.html',
   styleUrls: ['./engine.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EngineComponent implements AfterViewInit {
 
@@ -59,9 +60,12 @@ export class EngineComponent implements AfterViewInit {
 
   constructor(
     private cdRef:ChangeDetectorRef, 
-    private ngxChessBoardService: NgxChessBoardService) { }
+    private ngxChessBoardService: NgxChessBoardService) {
+      this.cdRef.detach();
+     }
 
   ngAfterViewInit(): void {
+    this.cdRef.detectChanges();
     this.createScoreList();
 
     this.board.reset();
@@ -129,7 +133,9 @@ export class EngineComponent implements AfterViewInit {
     this.candidates = candidateMovesByMaterial;
     this.bestMove = candidateMovesByMaterial[Math.floor(Math.random() * candidateMovesByMaterial.length)];
 
-    this.cdRef.detectChanges();
+    if(!this.isBotMode) {
+      this.cdRef.detectChanges();
+    }
 
     return this.bestMove;
   }
@@ -450,11 +456,11 @@ export class EngineComponent implements AfterViewInit {
     this.board.setFEN(fen);
   }
 
-  private startBot() {
+  private async startBot() {
     this.isBotMode = true;
     const robot = new RobotUser(this.lichessApi, this.getReply, this.botMove.bind(this), 
     this.updateGameState.bind(this));
-    robot.start();
+    await robot.start();
 
     this.lichessApi.getOnlineBots().then((bots) => {
       this.onlineBots = bots.data.trim().split("\n").map(JSON.parse);
@@ -464,6 +470,7 @@ export class EngineComponent implements AfterViewInit {
         }
         return -1;
       })
+      this.cdRef.detectChanges();
     });
     this.cdRef.detectChanges();
   }
@@ -477,7 +484,9 @@ export class EngineComponent implements AfterViewInit {
 
   private updateGameState(newGameState: string) {
     if(newGameState) {
-      this.gameState = newGameState;}
+      this.gameState = newGameState;
+      this.cdRef.detectChanges();
+    }
   }
 
   private getReply() {
