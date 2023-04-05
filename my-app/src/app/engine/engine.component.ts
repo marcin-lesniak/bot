@@ -15,6 +15,7 @@ import { Material } from '../components/material';
 import { TestBot } from '../test/TestBot';
 import { PawnsStructures } from '../components/pawns-structure';
 import { HangingPeaces } from '../components/hanging-peaces';
+import { AttackPeaces } from '../components/attack-peaces';
 
 @Component({
   selector: 'app-engine',
@@ -69,12 +70,12 @@ export class EngineComponent implements AfterViewInit {
     this.createScoreList();
 
     this.board.reset();
-    // this.loadFEN("r3r1k1/p3nppp/8/5bN1/5P2/2p5/P3P1PP/3KRB1R w - - 0 21"); // <--- Do sprawdzenia  
+    // this.loadFEN("rnbq1rk1/ppp1bpp1/4pn1p/3p4/3P4/1PN1PN2/PBP2PPP/R1Q1RBK1 w Qq - 0 1");  
     this.game();
     
-    // this.startRandomGame();
+    this.startRandomGame();
 
-    this.startBot();
+    // this.startBot();
     // this.testBot();
   }
 
@@ -86,6 +87,8 @@ export class EngineComponent implements AfterViewInit {
     this.scoreList.push(new PassedPawn(this.chess));
     this.scoreList.push(new PawnsStructures(this.chess, this.material));
     this.scoreList.push(new HangingPeaces(this.chess, this.material, this.SQUARES));
+    this.scoreList.push(new AttackPeaces(this.chess, this.material, this.SQUARES));
+  
 
     this.minScoreList.push(new OpenLine(this.chess));
     this.minScoreList.push(new LastRanks(this.chess));

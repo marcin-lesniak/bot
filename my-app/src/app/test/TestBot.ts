@@ -19,7 +19,7 @@ export class TestBot {
             console.log("TEST - " + testCase.decription);
             console.log(`${bestMoveStr} | ${testCase.bestMove}`);
         } else if(`${bestMoveStr}` !== `${testCase.bestMove}`) {
-            console.warn(`${testCase.decription} | ${bestMoveStr} | ${testCase.bestMove}`);
+            console.warn(`${testCase.decription} | Current:${bestMoveStr} | Expexted:${testCase.bestMove}`);
             failed++;
         } else {
             passed++;
@@ -44,6 +44,7 @@ export class TestBot {
     testCases.push(...this.kingRing());
     testCases.push(...this.doubledPawns());
     testCases.push(...this.hangingPeaces());
+    testCases.push(...this.attackPeaces());
     return testCases;
   }
 
@@ -361,7 +362,7 @@ export class TestBot {
 
     testCases.push(new TestCase(
         "king ring for white",
-        "rnbq1rk1/ppp1bpp1/4pn1p/3p4/3P4/1P2PN2/PBP2PPP/RNQ1RBK1 w Qq - 0 1",
+        "rnbq1rk1/ppp1bpp1/4pn1p/3p4/3P4/1PN1PN2/PBP2PPP/R1Q1RBK1 w Qq - 0 1",
         "f1d3"
     ));
 
@@ -376,21 +377,21 @@ export class TestBot {
 
     private doubledPawns() {
         let testCases: TestCase[] = [];
-    
+
         testCases.push(new TestCase(
             "recapture for white",
             "rn1qkbnr/ppp1pp1p/3p2p1/8/2PP4/4Pb2/PP2QPPP/RNB1KB1R w KQkq - 0 1",
             "e2f3"
         ));
-    
+
         testCases.push(new TestCase(
             "recapture for black",
             "rnb1kb1r/ppp1qppp/4pB2/3p4/3P4/4PN2/PPP2PPP/RN1QKB1R b KQkq - 0 1",
             "e7f6"
         ));
-    
-    return testCases;
-  }
+
+        return testCases;
+    }
 
   private hangingPeaces() {
     let testCases: TestCase[] = [];
@@ -435,5 +436,35 @@ export class TestBot {
 
     return testCases;
   }
+
+  private attackPeaces() {
+    let testCases: TestCase[] = [];
+
+    testCases.push(new TestCase(
+        "open file and attack - white",
+        "6k1/p1b2ppp/1p6/3p4/3P4/5N2/PP3PPP/5RK1 w - - 0 1",
+        "f1c1"
+    ));
+
+    testCases.push(new TestCase(
+        "open file and attack - black",
+        "r5k1/pp2pppp/4np2/8/8/1P4PP/P2B1P2/K7 b - - 0 1",
+        "a8d8"
+    ));
+
+    testCases.push(new TestCase(
+        "pawn fork - white",
+        "6k1/pnpnpppp/8/2P5/3Pp3/4P3/P2B4/K7 w - - 0 1",
+        "c5c6"
+    ));
+
+    testCases.push(new TestCase(
+        "knight fork - black",
+        "6k1/p3ppp1/n3n2p/8/2P1B2N/4P2R/P4P1P/6K1 b - - 0 1",
+        "e6g5"
+    ));
+
+    return testCases;
+}
 
 }

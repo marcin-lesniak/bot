@@ -30,8 +30,10 @@ export class PassedPawn implements ScorePosition {
                 let squere = board[i][j];
                 if(squere?.type === "p") {
                     if(squere?.color === "b") {
-                        isPassed[j] = false;
-                        unKnown--;
+                        if(isPassed[j] == undefined) {
+                            isPassed[j] = false;
+                            unKnown--;
+                        }
 
                         if(j>0 && isPassed[j-1] == undefined) {
                             isPassed[j-1] = false;
